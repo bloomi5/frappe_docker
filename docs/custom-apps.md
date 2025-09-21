@@ -108,7 +108,7 @@ sudo docker build \
   --build-arg=PYTHON_VERSION=3.11.9 \
   --build-arg=NODE_VERSION=18.20.2 \
   --build-arg=APPS_JSON_BASE64=$APPS_JSON_BASE64 \
-  --tag=faizan44/erpnext:v18 \
+  --tag=bloomi5/erpnext:v18 \
   --file=images/custom/Containerfile .
 ```
 
