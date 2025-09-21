@@ -29,8 +29,16 @@ Note:
 
 Generate base64 string from json file:
 
+scp the apps.json in the vm first. and clone the official repo.
+
 ```shell
-export APPS_JSON_BASE64=$(base64 -w 0 /path/to/apps.json)
+export APPS_JSON_BASE64=$(base64 -w 0 apps.json)
+```
+
+check
+
+```sh
+echo $APPS_JSON_BASE64
 ```
 
 Test the Previous Step: Decode the Base64-encoded Environment Variable
@@ -84,16 +92,32 @@ docker build \
 
 ### Custom build image
 
+```shell
+git clone https://github.com/faizanops3/frappe_docker.git
+cd frappe_docker
+```
+
 This method builds the base and build layer every time, it allows to customize Python and NodeJS runtime versions. It takes more time to build.
 
 It uses `images/custom/Containerfile`.
+
+```shell
+sudo docker build \
+  --build-arg=FRAPPE_PATH=https://github.com/frappe/frappe \
+  --build-arg=FRAPPE_BRANCH=version-15 \
+  --build-arg=PYTHON_VERSION=3.11.9 \
+  --build-arg=NODE_VERSION=18.20.2 \
+  --build-arg=APPS_JSON_BASE64=$APPS_JSON_BASE64 \
+  --tag=faizan44/erpnext:v18 \
+  --file=images/custom/Containerfile .
+```
 
 ```shell
 docker build \
   --build-arg=FRAPPE_PATH=https://github.com/frappe/frappe \
   --build-arg=FRAPPE_BRANCH=version-15 \
   --build-arg=PYTHON_VERSION=3.11.9 \
-  --build-arg=NODE_VERSION=20.19.2 \
+  --build-arg=NODE_VERSION=18.20.2 \
   --build-arg=APPS_JSON_BASE64=$APPS_JSON_BASE64 \
   --tag=ghcr.io/user/repo/custom:1.0.0 \
   --file=images/custom/Containerfile .
@@ -102,7 +126,7 @@ docker build \
 Custom build args,
 
 - `PYTHON_VERSION`, use the specified python version for base image. Default is `3.11.6`.
-- `NODE_VERSION`, use the specified nodejs version, Default `20.19.2`.
+- `NODE_VERSION`, use the specified nodejs version, Default `18.18.2`.
 - `DEBIAN_BASE` use the base Debian version, defaults to `bookworm`.
 - `WKHTMLTOPDF_VERSION`, use the specified qt patched `wkhtmltopdf` version. Default is `0.12.6.1-3`.
 - `WKHTMLTOPDF_DISTRO`, use the specified distro for debian package. Default is `bookworm`.
